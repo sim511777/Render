@@ -32,12 +32,10 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(686, 450);
-            this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("굴림체", 9F);
             this.Name = "FormMain";
             this.Text = "FormMain";
             this.Shown += new System.EventHandler(this.FormMain_Shown);
-            this.Paint += new System.Windows.Forms.PaintEventHandler(this.FormMain_Paint);
             this.Layout += new System.Windows.Forms.LayoutEventHandler(this.FormMain_Layout);
             this.ResumeLayout(false);
 

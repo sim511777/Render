@@ -52,19 +52,17 @@ namespace Render
                 if (IsDisposed)
                     break;
 
-                Invalidate();
-            }
-        }
+                MeasureTime();
 
-        private void FormMain_Paint(object sender, PaintEventArgs e) {
-            MeasureTime();
+                using (var g = Graphics.FromImage(dispBmp)) {
+                    string info = $"{fpsAvg,4:f0} fps, {dtimeAvg * 1000,5:f2} ms";
+                    g.Clear(Color.White);
+                    g.DrawString(info, Font, Brushes.Black, 0, 0);
+                }
 
-            using (var g = Graphics.FromImage(dispBmp)) {
-                string info = $"{fpsAvg,4:f0} fps, {dtimeAvg * 1000,5:f2} ms";
-                g.Clear(Color.White);
-                g.DrawString(info, Font, Brushes.Black, 0, 0);
+                bufG.Graphics.DrawImage(dispBmp, 0, 0);
+                bufG.Render();
             }
-            e.Graphics.DrawImage(dispBmp, 0, 0);
         }
 
         IntPtr dispBuf = IntPtr.Zero;
@@ -72,17 +70,23 @@ namespace Render
         int dispBH = 0;
         int dispStride = 0;
         Bitmap dispBmp = null;
+        BufferedGraphics bufG = null;
         private void FormMain_Layout(object sender, LayoutEventArgs e) {
             if (dispBuf != IntPtr.Zero) {
                 dispBmp.Dispose();
                 Marshal.FreeHGlobal(dispBuf);
             }
+    
             var size = ClientSize;
             dispBW = size.Width;
             dispBH = size.Height;
             dispStride = dispBW * 4;
             dispBuf = Marshal.AllocHGlobal(dispStride * dispBH);
             dispBmp = new Bitmap(dispBW, dispBH, dispStride, PixelFormat.Format32bppPArgb, dispBuf);
+            
+            if (bufG != null)
+                bufG.Dispose();
+            bufG = BufferedGraphicsManager.Current.Allocate(CreateGraphics(), ClientRectangle);
         }
     }
 }

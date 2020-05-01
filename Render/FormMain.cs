@@ -4,7 +4,9 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -57,8 +59,30 @@ namespace Render
         private void FormMain_Paint(object sender, PaintEventArgs e) {
             MeasureTime();
 
-            string info = $"{fpsAvg,4:f0} fps, {dtimeAvg * 1000,5:f2} ms";
-            e.Graphics.DrawString(info, Font, Brushes.Black, 0, 0);
+            using (var g = Graphics.FromImage(dispBmp)) {
+                string info = $"{fpsAvg,4:f0} fps, {dtimeAvg * 1000,5:f2} ms";
+                g.Clear(Color.White);
+                g.DrawString(info, Font, Brushes.Black, 0, 0);
+            }
+            e.Graphics.DrawImage(dispBmp, 0, 0);
+        }
+
+        IntPtr dispBuf = IntPtr.Zero;
+        int dispBW = 0;
+        int dispBH = 0;
+        int dispStride = 0;
+        Bitmap dispBmp = null;
+        private void FormMain_Layout(object sender, LayoutEventArgs e) {
+            if (dispBuf != IntPtr.Zero) {
+                dispBmp.Dispose();
+                Marshal.FreeHGlobal(dispBuf);
+            }
+            var size = ClientSize;
+            dispBW = size.Width;
+            dispBH = size.Height;
+            dispStride = dispBW * 4;
+            dispBuf = Marshal.AllocHGlobal(dispStride * dispBH);
+            dispBmp = new Bitmap(dispBW, dispBH, dispStride, PixelFormat.Format32bppArgb, dispBuf);
         }
     }
 }

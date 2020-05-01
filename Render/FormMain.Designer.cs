@@ -38,6 +38,7 @@
             this.Text = "FormMain";
             this.Shown += new System.EventHandler(this.FormMain_Shown);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.FormMain_Paint);
+            this.Layout += new System.Windows.Forms.LayoutEventHandler(this.FormMain_Layout);
             this.ResumeLayout(false);
 
         }

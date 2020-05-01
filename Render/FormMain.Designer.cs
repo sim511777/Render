@@ -36,6 +36,7 @@
             this.Font = new System.Drawing.Font("굴림체", 9F);
             this.Name = "FormMain";
             this.Text = "FormMain";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Shown += new System.EventHandler(this.FormMain_Shown);
             this.Layout += new System.Windows.Forms.LayoutEventHandler(this.FormMain_Layout);
             this.ResumeLayout(false);

@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -72,21 +73,22 @@ namespace Render
         Bitmap dispBmp = null;
         BufferedGraphics bufG = null;
         private void FormMain_Layout(object sender, LayoutEventArgs e) {
-            if (dispBuf != IntPtr.Zero) {
-                dispBmp.Dispose();
-                Marshal.FreeHGlobal(dispBuf);
-            }
-    
             var size = ClientSize;
             dispBW = size.Width;
             dispBH = size.Height;
             dispStride = dispBW * 4;
+
+            if (dispBuf != IntPtr.Zero) {
+                dispBmp.Dispose();
+                Marshal.FreeHGlobal(dispBuf);
+            }
             dispBuf = Marshal.AllocHGlobal(dispStride * dispBH);
             dispBmp = new Bitmap(dispBW, dispBH, dispStride, PixelFormat.Format32bppPArgb, dispBuf);
             
             if (bufG != null)
                 bufG.Dispose();
             bufG = BufferedGraphicsManager.Current.Allocate(CreateGraphics(), ClientRectangle);
+            bufG.Graphics.CompositingMode = CompositingMode.SourceCopy;
         }
     }
 }

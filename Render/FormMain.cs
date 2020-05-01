@@ -82,7 +82,7 @@ namespace Render
             dispBH = size.Height;
             dispStride = dispBW * 4;
             dispBuf = Marshal.AllocHGlobal(dispStride * dispBH);
-            dispBmp = new Bitmap(dispBW, dispBH, dispStride, PixelFormat.Format32bppArgb, dispBuf);
+            dispBmp = new Bitmap(dispBW, dispBH, dispStride, PixelFormat.Format32bppPArgb, dispBuf);
         }
     }
 }
